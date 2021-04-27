@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+	PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+ 
+<mapper namespace="pgs.library.mapper.BookMapper">
+	<select id="getList" resultType="pgs.library.domain.BookVO"> 
+	<![CDATA[
+	select * from tbl_bookList where bno > 0
+	]]>
+	</select>
+	
+	 
+	<insert id="insert">
+	<![CDATA[
+		insert into tbl_bookList (bno, title, author, genre, price, pubdate)
+		values (seq_book.nextval, #{title}, #{author}, #{genre}, #{price}, #{pubdate}) 
+		]]>
+	</insert>
+	
+	<!-- 실행한 pk를 얻어오고 싶을 때  -->
+	<insert id="insertSelectKey">
+		<selectKey keyProperty="bno" order="BEFORE" resultType="long">
+		<![CDATA[
+		select seq_book.nextval from dual
+		]]>
+		</selectKey>
+		<![CDATA[
+		insert into tbl_bookList (bno, title, author, genre, price, pubdate)
+			values (#{bno}, #{title}, #{author}, #{genre}, #{price}, #{pubdate}) 
+		]]>
+	</insert>
+	 
+	<select id="read" resultType="pgs.library.domain.BookVO">
+		<![CDATA[
+		select * from tbl_bookList where bno = #{bno}
+		]]> 
+	</select>
+	
+	 
+	<delete id="delete">
+		<![CDATA[
+		delete tbl_bookList where bno = #{bno}
+		]]>
+	</delete>
+	
+	 
+	<update id="update"> 
+		<![CDATA[
+		update tbl_bookList
+		set title= #{title}, author = #{author}, genre = #{genre}, price = #{price}, pubdate=sysdate where bno = #{bno}
+		]]>
+	</update>
+</mapper>
